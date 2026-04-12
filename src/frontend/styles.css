@@ -23,11 +23,11 @@ body::before {
 }
 
 button {
-	@apply bg-teal-700 text-white rounded-lg whitespace-nowrap text-sm px-4 active:scale-98;
+	@apply bg-teal-700 text-white rounded-lg whitespace-nowrap text-sm px-4 py-2 active:scale-98;
 }
 
 input {
-  @apply rounded-lg w-full;
+  @apply min-w-0 rounded-lg w-full;
 }
 
 .info {

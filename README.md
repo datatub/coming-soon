@@ -1,4 +1,4 @@
-# Coming Soon marketing site
+# Datatub is Coming Soon
 
 ## Local development
 
