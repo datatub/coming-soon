@@ -1,0 +1,24 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  namespace: datatub-coming-soon
+  name: datatub-coming-soon-ingress
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt
+    kubernetes.io/ingress.class: traefik
+spec:
+  tls:
+   - hosts:
+     - "datatub.app"
+     secretName: "datatub-coming-soon-tls"
+  rules:
+  - host: "datatub.app"
+    http:
+      paths:
+      - pathType: Prefix
+        path: "/"
+        backend:
+          service:
+            name: datatub-coming-soon-service
+            port:
+              number: 80

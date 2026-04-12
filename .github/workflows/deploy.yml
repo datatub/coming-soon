@@ -1,0 +1,68 @@
+name: build
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+  packages: write
+
+env:
+  TURBO_TELEMETRY_DISABLED: '1'
+  NODE_ENV: production
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+
+      - name: Install dependencies
+        run: bun install --frozen-lockfile
+
+      - name: Run lint
+        run: bun run lint
+
+      - name: Run tests
+        run: bun run test
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Login to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and Push
+        uses: docker/build-push-action@v5
+        with:
+          push: true
+          tags: |
+            ghcr.io/${{ github.repository }}/app:${{ github.sha }}
+
+      - name: Replace ENV variables in deploy files
+        env:
+          IMAGE: ghcr.io/${{ github.repository }}/app:${{ github.sha }}
+        run: |
+          mkdir apply
+          for f in $(find ./deploy/ -regex '.*\.ya?ml$'); do envsubst < $f > "./apply/$(basename $f)"; done
+          ls ./apply/
+
+      - name: Deploy to Kubernetes
+        uses: actions-hub/kubectl@248102ecd7c9057f9aef1c458da0b1f0d80f2916 # master
+        env:
+          KUBE_CONFIG: ${{ secrets.KUBE_CONFIG }}
+        with:
+          args: apply -f ./apply/
