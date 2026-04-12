@@ -1,5 +1,12 @@
 services:
   app:
     build: .
+    environment:
+      DATABASE_PATH: /data/subscribers.sqlite
     ports:
       - "3000:3000"
+    volumes:
+      - subscriber-data:/data
+
+volumes:
+  subscriber-data:

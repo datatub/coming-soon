@@ -18,7 +18,17 @@ spec:
       containers:
         - name: app
           image: $IMAGE
+          env:
+            - name: DATABASE_PATH
+              value: /data/subscribers.sqlite
           ports:
             - containerPort: 3000
+          volumeMounts:
+            - name: subscriber-data
+              mountPath: /data
+      volumes:
+        - name: subscriber-data
+          persistentVolumeClaim:
+            claimName: datatub-coming-soon-data
       imagePullSecrets:
         - name: ghcr-credentials

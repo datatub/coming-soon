@@ -1,8 +1,19 @@
+import { mkdirSync } from "node:fs";
+import { dirname } from "node:path";
 import { Database } from "bun:sqlite";
-const db = new Database(":memory:");
+
+const databasePath =
+  Bun.env.DATABASE_PATH ??
+  (Bun.env.NODE_ENV === "test" ? ":memory:" : "./data/subscribers.sqlite");
+
+if (databasePath !== ":memory:") {
+  mkdirSync(dirname(databasePath), { recursive: true });
+}
+
+const db = new Database(databasePath);
 
 db.run(`
-  CREATE TABLE subscribers (
+  CREATE TABLE IF NOT EXISTS subscribers (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     raw_email TEXT NOT NULL,
     email TEXT GENERATED ALWAYS AS (LOWER(TRIM(raw_email))) STORED UNIQUE
