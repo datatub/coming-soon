@@ -1,4 +1,6 @@
-# Datatub is Coming Soon
+# Datatub Coming Soon page
+
+![Screenshot](screenshot.png)
 
 ## Local development
 
