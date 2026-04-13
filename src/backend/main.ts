@@ -1,11 +1,11 @@
-import index from '../frontend/index.html';
+import index from "../frontend/index.html";
 import { Service } from "./service";
 
 const server = Bun.serve({
   port: 3000,
   development: Bun.env.NODE_ENV !== "production",
   routes: {
-    '/': index,
+    "/": index,
 
     "/api/subscribers": {
       POST: async (request) => {

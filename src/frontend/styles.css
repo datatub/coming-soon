@@ -7,14 +7,14 @@ body {
 }
 
 body::before {
-  content: '';
+  content: "";
   position: fixed;
   top: 5%;
   scale: 150%;
   left: 0;
   width: 100%;
   height: 100%;
-  background-image: url('datatub.png');
+  background-image: url("datatub.png");
   background-size: cover;
   background-position: center;
   opacity: 0.15;
