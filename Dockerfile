@@ -7,10 +7,9 @@ WORKDIR /usr/src/app
 COPY package.json bun.lock ./
 RUN bun install --frozen-lockfile
 
-# Copy source code and public assets.
+# Copy source code.
 COPY build.ts ./
 COPY src ./src
-COPY public ./public
 
 # Build the fullstack executable with Bun.build() so the Tailwind plugin is
 # applied during asset bundling.
